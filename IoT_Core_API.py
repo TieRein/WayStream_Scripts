@@ -1,7 +1,7 @@
 ## Author: Jacob Chesley
 ##
-## Initial API for direct communication between application and RPi
-## Last Updated: 1/25/19
+## API for direct communication between application and RPi
+## Last Updated: 2/5/19
 
 import boto3
 import credentials
@@ -16,11 +16,11 @@ client = boto3.client('iot-data', region_name=region, aws_access_key_id=access_k
 
 def lambda_handler(event, context):
     response = client.publish(
-        topic='Quick_Run',
+        topic=event['topic'],
         qos=1,
-        payload=json.dumps({"Open valve": 1})
+        payload=json.dumps({"device": event['device'], "duration": event['duration']})
         )
     return {
         'statusCode': 200,
-        'body': json.dumps('Success')
+        'body': json.dumps(event)
     }
